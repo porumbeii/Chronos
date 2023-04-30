@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+            margin: 0px;
+            background-color: white;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+
+<body>
+    <canvas id="gameCanvas"> </canvas>
+
+    <script type="module">
+        var canvas = document.getElementById("gameCanvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var context = canvas.getContext("2d");
+
+        import { Loader } from './sources/controls/loader.js';
+        var loader = new Loader(canvas.width, canvas.height);
+
+        var allscriptsLoaded = false;
+        onload = (event) => {
+            allscriptsLoaded = true;
+        };
+
+        var angle = 0;
+
+        function Update(timestamp) {
+            context.fillStyle = 'white';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            loader.Update(timestamp);
+            loader.Draw(context);
+
+            if (!allscriptsLoaded)
+                requestAnimationFrame(Update);
+            else {
+                Game.Initialize(canvas, context, loader);
+                Game.Loop();
+                return;
+            }
+        }
+
+        import { Game } from './sources/core/game.js';
+        Update();
+
+    </script>
+
+
+</body>
+
+</html>
